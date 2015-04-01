@@ -34,6 +34,12 @@ public class TileMap {
 	private BufferedImage tileset;
 	private int numTilesAcross;
 	private Tile[][] tiles;
+	private boolean blocked;
+	private int split;
+	
+	private final int NO_SPLIT = 0;
+	private final int SPLIT_TOP = 1;
+	private final int SPLIT_BOTTOM = 2;
 	
 	// drawing
 	private int rowOffset;
@@ -41,12 +47,15 @@ public class TileMap {
 	private int numRowsToDraw;
 	private int numColsToDraw;
 	
-	public TileMap(int tileSize) 
+	public TileMap(int tileSize, boolean blocked, int split) 
 	{
 		this.tileSize = tileSize;
+		this.blocked = blocked;
+		this.split = split;
 		numRowsToDraw = GamePanel.HEIGHT / tileSize + 2;
 		numColsToDraw = GamePanel.WIDTH / tileSize + 2;
 		tween = 0.07;
+		
 	}
 	
 	public void loadTiles(String s)
@@ -54,19 +63,55 @@ public class TileMap {
 		
 		try
 		{
-
+			
+			int type = 0;
+			if(blocked) { type = 1; }
+			
 			tileset = ImageIO.read(getClass().getResourceAsStream(s));
 			numTilesAcross = tileset.getWidth() / tileSize;
-			tiles = new Tile[2][numTilesAcross];
+			tiles = new Tile[1][numTilesAcross];
 			
 			BufferedImage subimage;
 			for(int col = 0; col < numTilesAcross; col++) 
 			{
-				subimage = tileset.getSubimage(col * tileSize, 0, tileSize, tileSize);
-				tiles[0][col] = new Tile(subimage, Tile.NORMAL);
-				
-				subimage = tileset.getSubimage(col * tileSize, tileSize, tileSize, tileSize);
-				tiles[1][col] = new Tile(subimage, Tile.BLOCKED);
+				if(split == NO_SPLIT)
+				{
+					subimage = tileset.getSubimage(col * tileSize, 0, tileSize, tileSize);
+					if(col == 0)
+					{
+						tiles[0][col] = new Tile(subimage, 0);
+					}
+					else
+					{
+						tiles[0][col] = new Tile(subimage, type);
+					}
+				}
+				else if(split == SPLIT_TOP)
+				{
+					subimage = tileset.getSubimage(col * tileSize, 0, tileSize, tileSize / 2);
+					if(col == 0)
+					{
+						tiles[0][col] = new Tile(subimage, 0);
+					}
+					else
+					{
+						tiles[0][col] = new Tile(subimage, type);
+					}
+				}
+				else if(split == SPLIT_BOTTOM)
+				{
+					
+					subimage = tileset.getSubimage(col * tileSize, tileSize / 2, tileSize, tileSize / 2);
+					if(col == 0)
+					{
+						tiles[0][col] = new Tile(subimage, 0);
+					}
+					else
+					{
+						tiles[0][col] = new Tile(subimage, type);
+					}
+					
+				}
 			}
 			
 		}
@@ -172,7 +217,26 @@ public class TileMap {
 				int r = rc / numTilesAcross;
 				int c = rc % numTilesAcross;
 				
-				g.drawImage(tiles[r][c].getImage(), (int)x + col * tileSize, (int)y + row * tileSize, null);
+				//System.out.println("CALL 4");
+				
+				if(split == NO_SPLIT)
+				{
+					
+					g.drawImage(tiles[r][c].getImage(), (int)x + col * tileSize, (int)y + row * tileSize, null);
+				}
+				
+				else if(split == SPLIT_TOP)
+				{
+					
+					g.drawImage(tiles[r][c].getImage(), (int)x + col * tileSize, (int)y + row * tileSize, null);
+				}
+				
+				else if(split == SPLIT_BOTTOM)
+				{
+					
+					g.drawImage(tiles[r][c].getImage(), (int)x + col * tileSize, (int)y + (row * tileSize) + (tileSize / 2), null);
+				}
+				
 				
 			}
 			
@@ -181,22 +245,3 @@ public class TileMap {
 	}
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

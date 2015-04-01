@@ -18,12 +18,15 @@ public class Player extends MapObject {
 	private boolean flinching;
 	private long flinchTimer;
 	
+	
+	
 	// scratch
 	private boolean swinging;
 	private int swordDamage;
 	private int swordRange;
 	
 	// animations
+	private double xorig, yorig;
 	private ArrayList<BufferedImage[]> sprites;
 	private final int[] numFrames = {1, 1, 1, 4, 4, 2, 2, 2, 2};
 	
@@ -46,7 +49,7 @@ public class Player extends MapObject {
 		
 		width = 32;
 		height = 32;
-		cwidth = 20;
+		cwidth = 32;
 		cheight = 20;
 		
 		moveSpeed = 0.3;
@@ -264,11 +267,38 @@ public class Player extends MapObject {
 	
 	public void update()
 	{
-		
+	
 		// update position
 		getNextPosition();
 		checkTileMapCollision();
 		setPosition(xtemp, ytemp);
+		
+		if(previousAction == SWINGING && animation.hasPlayedOnce())
+		{
+			if(lastDirection == "left")
+			{
+				x += 16;
+			}
+			else if(lastDirection == "right")
+			{
+				x -= 16;
+			}
+			else if(lastDirection == "up")
+			{
+				y += 16;
+			}
+			else if(lastDirection == "down")
+			{
+				y -= 16;
+			}
+			
+			//x = xorig;
+			//y = yorig;
+			
+			normalizeShadow();
+			resumeInput();
+			
+		}
 		
 		// check attack has stopped
 		if(currentAction == SWINGING) 
@@ -289,30 +319,52 @@ public class Player extends MapObject {
 		// set animation
 		if(swinging) 
 		{
+			xorig = x;
+			yorig = y;
+			stopInput();
+			
 			if(currentAction != SWINGING) 
 			{
 				//sfx.get("swing").play();
 				currentAction = SWINGING;
 				if(lastDirection == "left" || lastDirection == "right")
 				{
+					if(lastDirection == "left")
+					{
+						x -= 16;
+						specialShadow(+32, 0);
+					}
+					else if(lastDirection == "right")
+					{
+						x += 16;
+					}
 					animation.setFrames(sprites.get(SWINGING));
 					animation.setDelay(300);
 					width = 64;
 					height = 32;
+					
 				}
 				else if(lastDirection == "up")
 				{
+					y -= 16;
+					
 					animation.setFrames(sprites.get(SWINGINGUP));
 					animation.setDelay(300);
 					width = 32;
 					height = 64;
+					
+					specialShadow(0, +32);
+					
 				}
 				else if(lastDirection == "down")
 				{
+					y += 16;
+					
 					animation.setFrames(sprites.get(SWINGINGDOWN));
 					animation.setDelay(300);
 					width = 32;
 					height = 64;
+					
 				}
 			}
 		}
@@ -325,6 +377,7 @@ public class Player extends MapObject {
 				animation.setDelay(300);
 				width = 32;
 				height = 32;
+				
 			}
 		}
 		
@@ -337,6 +390,7 @@ public class Player extends MapObject {
 				animation.setDelay(300);
 				width = 32;
 				height = 32;
+				
 			}
 		}
 		else if(down) 
@@ -348,6 +402,7 @@ public class Player extends MapObject {
 				animation.setDelay(300);
 				width = 32;
 				height = 32;
+				
 			}
 		}
 		else 
@@ -361,6 +416,7 @@ public class Player extends MapObject {
 					animation.setDelay(300);
 					width = 32;
 					height = 32;
+					
 				}
 			}
 			
@@ -373,6 +429,7 @@ public class Player extends MapObject {
 					animation.setDelay(300);
 					width = 32;
 					height = 32;
+					
 				}
 			}
 			
@@ -385,11 +442,14 @@ public class Player extends MapObject {
 					animation.setDelay(300);
 					width = 32;
 					height = 32;
+					
 				}
 			}
 		}
 		
 		animation.update();
+		
+		previousAction = currentAction;
 		
 		// set direction
 		if(currentAction != SWINGING) 

@@ -12,7 +12,9 @@ import java.util.ArrayList;
 
 public class OverworldState extends GameState {
 	
-	private TileMap tileMap;
+	private TileMap freeTileMap;
+	private TileMap blockedTileMapTop, blockedTileMapBottom;
+	private TileMap dualTileMap;
 	private Background bg;
 	
 	private Player player;
@@ -32,14 +34,26 @@ public class OverworldState extends GameState {
 	public void init() 
 	{
 		
-		tileMap = new TileMap(32);
-		tileMap.loadTiles("/Tilesets/testtileset2.png");
-		tileMap.loadMap("/Maps/testmap3.map");
-		tileMap.setPosition(0, 0);
-		tileMap.setTween(1);
+		freeTileMap = new TileMap(32, false, 0);
+		freeTileMap.loadTiles("/Tilesets/freetileset.png");
+		freeTileMap.loadMap("/Maps/overworldfree.map");
+		freeTileMap.setPosition(0, 0);
+		freeTileMap.setTween(1);
 		
-		player = new Player(tileMap);
-		player.setPosition(100, 100);
+		blockedTileMapTop = new TileMap(32, true, 1);
+		blockedTileMapTop.loadTiles("/Tilesets/blockedtileset.png");
+		blockedTileMapTop.loadMap("/Maps/overworldblocked.map");
+		blockedTileMapTop.setPosition(0, 0);
+		blockedTileMapTop.setTween(1);
+		
+		blockedTileMapBottom = new TileMap(32, true, 2);
+		blockedTileMapBottom.loadTiles("/Tilesets/blockedtileset.png");
+		blockedTileMapBottom.loadMap("/Maps/overworldblocked.map");
+		blockedTileMapBottom.setPosition(0, 0);
+		blockedTileMapBottom.setTween(1);
+		
+		player = new Player(blockedTileMapTop);
+		player.setPosition(64, 64);
 		
 		populateEnemies();
 		
@@ -49,7 +63,7 @@ public class OverworldState extends GameState {
 		hud = new HUD(player);
 		
 		bgMusic = new AudioPlayer("/Music/Overworld_Theme.wav");
-		bgMusic.play();
+		//bgMusic.play();
 		
 	}
 	
@@ -65,7 +79,9 @@ public class OverworldState extends GameState {
 		
 		// update player
 		player.update();
-		tileMap.setPosition(GamePanel.WIDTH / 2 - player.getx(), GamePanel.HEIGHT / 2 - player.gety());
+		freeTileMap.setPosition(GamePanel.WIDTH / 2 - player.getx(), GamePanel.HEIGHT / 2 - player.gety());
+		blockedTileMapTop.setPosition(GamePanel.WIDTH / 2 - player.getx(), GamePanel.HEIGHT / 2 - player.gety());
+		blockedTileMapBottom.setPosition(GamePanel.WIDTH / 2 - player.getx(), GamePanel.HEIGHT / 2 - player.gety());
 		
 		// The following code is preemptive of the implementation of enemies
 		//
@@ -105,11 +121,17 @@ public class OverworldState extends GameState {
 		// draw bg
 		//bg.draw(g);
 		
-		// draw tilemap
-		tileMap.draw(g);
+		// draw free tilemap
+		freeTileMap.draw(g);
+		
+		// draw blocked tilemap bottom so it is below player
+		blockedTileMapBottom.draw(g);
 		
 		// draw player
 		player.draw(g);
+		
+		// draw blocked tilemap top so it is above player
+		blockedTileMapTop.draw(g);
 		
 		// draw enemies
 		/*for(int i = 0; i < enemies.size(); i++) 
@@ -125,7 +147,7 @@ public class OverworldState extends GameState {
 		}*/
 		
 		// draw hud
-		hud.draw(g);
+		//hud.draw(g);
 		
 	}
 	
