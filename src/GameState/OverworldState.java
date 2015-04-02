@@ -14,8 +14,8 @@ public class OverworldState extends GameState {
 	
 	private TileMap freeTileMap;
 	private TileMap blockedTileMapTop, blockedTileMapBottom;
-	private TileMap dualTileMap;
-	private Background bg;
+	
+	private int scale;
 	
 	private Player player;
 	
@@ -28,6 +28,7 @@ public class OverworldState extends GameState {
 	public OverworldState(GameStateManager gsm) 
 	{
 		this.gsm = gsm;
+		this.scale = gsm.scale;
 		init();
 	}
 	
@@ -36,19 +37,19 @@ public class OverworldState extends GameState {
 		
 		freeTileMap = new TileMap(32, false, 0);
 		freeTileMap.loadTiles("/Tilesets/freetileset.png");
-		freeTileMap.loadMap("/Maps/overworldfree.map");
+		freeTileMap.loadMap("/Maps/testingmapfree.map");
 		freeTileMap.setPosition(0, 0);
 		freeTileMap.setTween(1);
 		
 		blockedTileMapTop = new TileMap(32, true, 1);
 		blockedTileMapTop.loadTiles("/Tilesets/blockedtileset.png");
-		blockedTileMapTop.loadMap("/Maps/overworldblocked.map");
+		blockedTileMapTop.loadMap("/Maps/testingmapblocked.map");
 		blockedTileMapTop.setPosition(0, 0);
 		blockedTileMapTop.setTween(1);
 		
 		blockedTileMapBottom = new TileMap(32, true, 2);
 		blockedTileMapBottom.loadTiles("/Tilesets/blockedtileset.png");
-		blockedTileMapBottom.loadMap("/Maps/overworldblocked.map");
+		blockedTileMapBottom.loadMap("/Maps/testingmapblocked.map");
 		blockedTileMapBottom.setPosition(0, 0);
 		blockedTileMapBottom.setTween(1);
 		
@@ -60,10 +61,10 @@ public class OverworldState extends GameState {
 		//explosions = new ArrayList<Explosion>();
 		
 		// The hud shows important information such as life and energy (currently denoted as a heart and a fire)
-		hud = new HUD(player);
+		hud = new HUD(player, scale);
 		
 		bgMusic = new AudioPlayer("/Music/Overworld_Theme.wav");
-		//bgMusic.play();
+		bgMusic.play();
 		
 	}
 	
@@ -118,9 +119,6 @@ public class OverworldState extends GameState {
 	
 	public void draw(Graphics2D g) {
 		
-		// draw bg
-		//bg.draw(g);
-		
 		// draw free tilemap
 		freeTileMap.draw(g);
 		
@@ -147,7 +145,7 @@ public class OverworldState extends GameState {
 		}*/
 		
 		// draw hud
-		//hud.draw(g);
+		hud.draw(g);
 		
 	}
 	

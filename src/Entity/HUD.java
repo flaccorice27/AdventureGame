@@ -2,6 +2,7 @@ package Entity;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+
 import javax.imageio.ImageIO;
 
 public class HUD {
@@ -11,31 +12,31 @@ public class HUD {
 	private BufferedImage image;
 	private Font font;
 	
-	public HUD(Player p) {
+	private int scale;
+	
+	public HUD(Player p, int scale) 
+	{
 		player = p;
-		try {
-			image = ImageIO.read(
-				getClass().getResourceAsStream(
-					"/HUD/hud.gif"
-				)
-			);
+		this.scale = scale;
+		
+		try
+		{
+			image = ImageIO.read(getClass().getResourceAsStream("/HUD/hud.png"));
+			image.getScaledInstance(image.getWidth() / scale, image.getHeight() / scale, 0);
 			font = new Font("Arial", Font.PLAIN, 14);
 		}
-		catch(Exception e) {
+		catch(Exception e) 
+		{
 			e.printStackTrace();
 		}
 	}
 	
-	public void draw(Graphics2D g) {
-		
-		g.drawImage(image, 0, 10, null);
+	public void draw(Graphics2D g)
+	{
+		g.drawImage(image, 0, 0, image.getWidth() / scale, image.getHeight() / scale - 12, null);
 		g.setFont(font);
 		g.setColor(Color.WHITE);
-		g.drawString(
-			player.getHealth() + "/" + player.getMaxHealth(),
-			30,
-			25
-		);
+		g.drawString(player.getHealth() + "/" + player.getMaxHealth(), 30, 25);
 		
 	}
 	

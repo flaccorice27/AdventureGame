@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 import GameState.GameStateManager;
 
 @SuppressWarnings("serial")
-public class GamePanel extends JPanel implements Runnable, KeyListener{
+public class GamePanel extends JPanel implements Runnable, KeyListener {
 	
 	// dimensions
 	private static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -62,7 +62,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 		
 		running = true;
 		
-		gsm = new GameStateManager();
+		gsm = new GameStateManager(SCALE);
 		
 	}
 	

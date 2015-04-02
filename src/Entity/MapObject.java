@@ -62,6 +62,7 @@ public abstract class MapObject {
 	
 	// shadow
 	protected BufferedImage shadow;
+	protected boolean hasShadow = true;
 	
 	// movement
 	protected boolean takingInput = true;
@@ -299,6 +300,11 @@ public abstract class MapObject {
 		}
 	}
 	
+	public boolean isLeft() { return left; }
+	public boolean isRight() { return right; }
+	public boolean isUp() { return up; }
+	public boolean isDown() { return down; }
+	
 	public void stopInput()
 	{
 		takingInput = false;
@@ -332,18 +338,20 @@ public abstract class MapObject {
 		
 		if(facingRight) 
 		{
+			if(hasShadow)
+			{
+				g.drawImage(shadow, null, (int)(x + xmap - width / 2) - 6 + xoff, (int)(y + ymap - height / 2) + 28 + yoff);
+			}
 			g.drawImage(animation.getImage(), (int)(x + xmap - width / 2), (int)(y + ymap - height / 2), null);
-			g.drawImage(shadow, null, (int)(x + xmap - width / 2) - 6 + xoff, (int)(y + ymap - height / 2) + 28 + yoff);
-			//g.setColor(shadowColor);
-			//g.fillOval((int)(x + xmap - width / 2) - 6 + xoff, (int)(y + ymap - height / 2) + 28 + yoff, 44, 8);
 			
 		}
 		else 
 		{
+			if(hasShadow)
+			{
+				g.drawImage(shadow, null, (int)(x + xmap - width / 2) - 6 + xoff, (int)(y + ymap - height / 2) + 28 + yoff);
+			}
 			g.drawImage(animation.getImage(), (int)(x + xmap - width / 2 + width), (int)(y + ymap - height / 2), -width, height, null);
-			g.drawImage(shadow, null, (int)(x + xmap - width / 2) - 6 + xoff, (int)(y + ymap - height / 2) + 28 + yoff);
-			//g.setColor(shadowColor);
-			//g.fillOval((int)(x + xmap - width / 2) - 6 + xoff, (int)(y + ymap - height / 2) + 28 + yoff, 44, 8);
 		}
 	}
 	

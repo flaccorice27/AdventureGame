@@ -18,7 +18,17 @@ public class Player extends MapObject {
 	private boolean flinching;
 	private long flinchTimer;
 	
+	//private Armor chestplate;
+	private Armor gauntlets;
+	//private Armor leggings;
+	//private Armor boots;
+	//private Armor helmet;
 	
+	private int chestplateMat;
+	private int gauntletsMat;
+	private int leggingsMat;
+	private int bootsMat;
+	private int helmetMat;
 	
 	// scratch
 	private boolean swinging;
@@ -28,7 +38,7 @@ public class Player extends MapObject {
 	// animations
 	private double xorig, yorig;
 	private ArrayList<BufferedImage[]> sprites;
-	private final int[] numFrames = {1, 1, 1, 4, 4, 2, 2, 2, 2};
+	private final int[] numFrames = {1, 1, 1, 8, 8, 15, 5, 5, 5};
 	
 	// animation actions
 	private static final int IDLEHORIZONTAL = 0;
@@ -49,7 +59,7 @@ public class Player extends MapObject {
 		
 		width = 32;
 		height = 32;
-		cwidth = 32;
+		cwidth = 20;
 		cheight = 20;
 		
 		moveSpeed = 0.3;
@@ -63,11 +73,18 @@ public class Player extends MapObject {
 		swordDamage = 8;
 		swordRange = 40;
 		
+		// isntantiate armors
+		//chestplate = new Armor(tileMap, 1);
+		gauntlets = new Armor(tileMap, 2, "none");
+		//leggings = new Armor(tileMap, 3);
+		//boots = new Armor(tileMap, 4);
+		//helmet = new Armor(tileMap, 5);
+		
 		// load sprites
 		try 
 		{
 			
-			BufferedImage spritesheet = ImageIO.read(getClass().getResourceAsStream("/Sprites/Player/fusespritesheet.png"));
+			BufferedImage spritesheet = ImageIO.read(getClass().getResourceAsStream("/Sprites/Player/hero.png"));
 			
 			sprites = new ArrayList<BufferedImage[]>();
 			for(int i = 0; i < 9; i++) 
@@ -78,22 +95,22 @@ public class Player extends MapObject {
 				for(int j = 0; j < numFrames[i]; j++) 
 				{
 					
-					if(i != SWINGING && i != SWINGINGUP && i != SWINGINGDOWN) 
-					{
+					//if(i != SWINGING && i != SWINGINGUP && i != SWINGINGDOWN) 
+					//{
 						bi[j] = spritesheet.getSubimage(j * width, i * height, width, height);
-					}
-					else if(i == SWINGING)
-					{
-						bi[j] = spritesheet.getSubimage(j * width * 2, i * height, width * 2, height);
-					}
-					else if(i == SWINGINGUP)
-					{
-						bi[j] = spritesheet.getSubimage(j * width, i * height, width, height * 2);
-					}
-					else if(i == SWINGINGDOWN)
-					{
-						bi[j] = spritesheet.getSubimage(j * width, i * height + height, width, height * 2);
-					}
+					//}
+					//else if(i == SWINGING)
+					//{
+					//	bi[j] = spritesheet.getSubimage(j * width * 2, i * height, width * 2, height);
+					//}
+					//else if(i == SWINGINGUP)
+					//{
+					//	bi[j] = spritesheet.getSubimage(j * width, i * height, width, height * 2);
+					//}
+					//else if(i == SWINGINGDOWN)
+					//{
+					//	bi[j] = spritesheet.getSubimage(j * width, i * height + height, width, height * 2);
+					//}
 					
 				}
 				
@@ -108,13 +125,13 @@ public class Player extends MapObject {
 		}
 		
 		animation = new Animation();
-		currentAction = IDLEUP;
-		animation.setFrames(sprites.get(IDLEUP));
+		currentAction = IDLEDOWN;
+		animation.setFrames(sprites.get(IDLEDOWN));
 		animation.setDelay(400);
 		
 		sfx = new HashMap<String, AudioPlayer>();
 		//sfx.put("jump", new AudioPlayer("/SFX/jump.mp3"));
-		//sfx.put("swing", new AudioPlayer("/SFX/scratch.mp3"));
+		sfx.put("swing", new AudioPlayer("/SFX/scratch.mp3"));
 		
 	}
 	
@@ -130,6 +147,21 @@ public class Player extends MapObject {
 	public void setSwinging() 
 	{
 		swinging = true;
+	}
+	
+	public boolean isSwinging()
+	{
+		return swinging;
+	}
+	
+	public int getAction()
+	{
+		return currentAction;
+	}
+	
+	public String getDirection()
+	{
+		return lastDirection;
 	}
 	
 	public void checkAttack(ArrayList<Enemy> enemies) 
@@ -275,25 +307,6 @@ public class Player extends MapObject {
 		
 		if(previousAction == SWINGING && animation.hasPlayedOnce())
 		{
-			if(lastDirection == "left")
-			{
-				x += 16;
-			}
-			else if(lastDirection == "right")
-			{
-				x -= 16;
-			}
-			else if(lastDirection == "up")
-			{
-				y += 16;
-			}
-			else if(lastDirection == "down")
-			{
-				y -= 16;
-			}
-			
-			//x = xorig;
-			//y = yorig;
 			
 			normalizeShadow();
 			resumeInput();
@@ -325,45 +338,37 @@ public class Player extends MapObject {
 			
 			if(currentAction != SWINGING) 
 			{
-				//sfx.get("swing").play();
+				sfx.get("swing").play();
 				currentAction = SWINGING;
 				if(lastDirection == "left" || lastDirection == "right")
 				{
-					if(lastDirection == "left")
-					{
-						x -= 16;
-						specialShadow(+32, 0);
-					}
-					else if(lastDirection == "right")
-					{
-						x += 16;
-					}
+					
 					animation.setFrames(sprites.get(SWINGING));
-					animation.setDelay(300);
-					width = 64;
+					animation.setDelay(75);
+					width = 32;
 					height = 32;
 					
 				}
 				else if(lastDirection == "up")
 				{
-					y -= 16;
+					//y -= 16;
 					
 					animation.setFrames(sprites.get(SWINGINGUP));
-					animation.setDelay(300);
+					animation.setDelay(75);
 					width = 32;
-					height = 64;
+					height = 32;
 					
-					specialShadow(0, +32);
+					//specialShadow(0, +32);
 					
 				}
 				else if(lastDirection == "down")
 				{
-					y += 16;
+					//y += 16;
 					
 					animation.setFrames(sprites.get(SWINGINGDOWN));
-					animation.setDelay(300);
+					animation.setDelay(75);
 					width = 32;
-					height = 64;
+					height = 32;
 					
 				}
 			}
@@ -374,7 +379,7 @@ public class Player extends MapObject {
 			{
 				currentAction = WALKINGHORIZONTAL;
 				animation.setFrames(sprites.get(WALKINGHORIZONTAL));
-				animation.setDelay(300);
+				animation.setDelay(50);
 				width = 32;
 				height = 32;
 				
@@ -387,7 +392,7 @@ public class Player extends MapObject {
 			{
 				currentAction = WALKINGUP;
 				animation.setFrames(sprites.get(WALKINGUP));
-				animation.setDelay(300);
+				animation.setDelay(100);
 				width = 32;
 				height = 32;
 				
@@ -399,7 +404,7 @@ public class Player extends MapObject {
 			{
 				currentAction = WALKINGDOWN;
 				animation.setFrames(sprites.get(WALKINGDOWN));
-				animation.setDelay(300);
+				animation.setDelay(100);
 				width = 32;
 				height = 32;
 				
@@ -448,6 +453,7 @@ public class Player extends MapObject {
 		}
 		
 		animation.update();
+		gauntlets.update(this);
 		
 		previousAction = currentAction;
 		
@@ -476,6 +482,7 @@ public class Player extends MapObject {
 		
 		super.draw(g);
 		
+		gauntlets.draw(g);
 		
 	}
 	

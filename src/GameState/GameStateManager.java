@@ -7,6 +7,8 @@ public class GameStateManager {
 	private GameState[] gameStates;
 	private int currentState;
 	private int previousState;
+
+	public int scale;
 	
 	private boolean paused = false;
 	
@@ -15,7 +17,7 @@ public class GameStateManager {
 	public static final int PAUSEDSTATE = 1;
 	public static final int OVERWORLDSTATE = 2;
 	
-	public GameStateManager() 
+	public GameStateManager(int scale) 
 	{
 		
 		gameStates = new GameState[NUMGAMESTATES];
@@ -24,6 +26,7 @@ public class GameStateManager {
 		previousState = MENUSTATE;
 		loadState(currentState);
 		
+		this.scale = scale;
 	}
 	
 	private void loadState(int state) 
