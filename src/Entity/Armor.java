@@ -17,10 +17,12 @@ public class Armor extends MapObject {
 	private final static int MATERIAL_NONE = 0;
 	private final static int MATERIAL_LEATHER = 1;
 	private final static int MATERIAL_STEEL = 2;
+	private final static int MATERIAL_TEST = 5;
 	
 	// animations
 	private ArrayList<BufferedImage[]> sprites;
 	private final int[] numFrames = {1, 1, 1, 8, 8, 15, 5, 5, 5};
+	private ArmorManager manager;
 	
 	// animation actions
 	private static final int IDLEHORIZONTAL = 0;
@@ -56,6 +58,12 @@ public class Armor extends MapObject {
 		{
 			this.material = MATERIAL_STEEL;
 		}
+		else if(material.equals("test"))
+		{
+			this.material = MATERIAL_TEST;
+		}
+		
+		manager = new ArmorManager(this.location, this.material);
 		
 		width = 32;
 		height = 32;
@@ -71,7 +79,7 @@ public class Armor extends MapObject {
 		try 
 		{
 			
-			BufferedImage spritesheet = ImageIO.read(getClass().getResourceAsStream("/Sprites/Player/hero.testblue.png"));
+			BufferedImage spritesheet = ImageIO.read(getClass().getResourceAsStream(manager.getSpriteSheet()));
 			
 			sprites = new ArrayList<BufferedImage[]>();
 			for(int i = 0; i < 9; i++) 
@@ -292,156 +300,36 @@ public class Armor extends MapObject {
 	
 	public void setMaterial(String material)
 	{
-		if(material.equals("none"))
+		
+		try 
 		{
-			this.material = MATERIAL_NONE;
 			
-			sprites.clear();
+			BufferedImage spritesheet = ImageIO.read(getClass().getResourceAsStream(manager.getSpriteSheet()));
 			
-			try 
+			sprites = new ArrayList<BufferedImage[]>();
+			for(int i = 0; i < 9; i++) 
 			{
 				
-				BufferedImage spritesheet = ImageIO.read(getClass().getResourceAsStream("/Sprites/Armor/noarmor.png"));
+				BufferedImage[] bi = new BufferedImage[numFrames[i]];
 				
-				sprites = new ArrayList<BufferedImage[]>();
-				for(int i = 0; i < 9; i++) 
+				for(int j = 0; j < numFrames[i]; j++) 
 				{
 					
-					BufferedImage[] bi = new BufferedImage[numFrames[i]];
-					
-					for(int j = 0; j < numFrames[i]; j++) 
-					{
-						
-						if(i != SWINGING && i != SWINGINGUP && i != SWINGINGDOWN) 
-						{
-							bi[j] = spritesheet.getSubimage(j * width, i * height, width, height);
-						}
-						else if(i == SWINGING)
-						{
-							bi[j] = spritesheet.getSubimage(j * width * 2, i * height, width * 2, height);
-						}
-						else if(i == SWINGINGUP)
-						{
-							bi[j] = spritesheet.getSubimage(j * width, i * height, width, height * 2);
-						}
-						else if(i == SWINGINGDOWN)
-						{
-							bi[j] = spritesheet.getSubimage(j * width, i * height + height, width, height * 2);
-						}
-						
-					}
-					
-					sprites.add(bi);
-					
+						bi[j] = spritesheet.getSubimage(j * width, i * height, width, height);
 					
 				}
 				
+				sprites.add(bi);
+				
+				
 			}
-			catch(Exception e) 
-			{
-				e.printStackTrace();
-			}
+			
 		}
-		else if(material.equals("leather"))
+		catch(Exception e) 
 		{
-			this.material = MATERIAL_LEATHER;	
-			
-			sprites.clear();
-			
-			try 
-			{
-				
-				BufferedImage spritesheet = ImageIO.read(getClass().getResourceAsStream("/Sprites/Armor/leatherarmor.png"));
-				
-				sprites = new ArrayList<BufferedImage[]>();
-				for(int i = 0; i < 9; i++) 
-				{
-					
-					BufferedImage[] bi = new BufferedImage[numFrames[i]];
-					
-					for(int j = 0; j < numFrames[i]; j++) 
-					{
-						
-						if(i != SWINGING && i != SWINGINGUP && i != SWINGINGDOWN) 
-						{
-							bi[j] = spritesheet.getSubimage(j * width, i * height, width, height);
-						}
-						else if(i == SWINGING)
-						{
-							bi[j] = spritesheet.getSubimage(j * width * 2, i * height, width * 2, height);
-						}
-						else if(i == SWINGINGUP)
-						{
-							bi[j] = spritesheet.getSubimage(j * width, i * height, width, height * 2);
-						}
-						else if(i == SWINGINGDOWN)
-						{
-							bi[j] = spritesheet.getSubimage(j * width, i * height + height, width, height * 2);
-						}
-						
-					}
-					
-					sprites.add(bi);
-					
-					
-				}
-				
-			}
-			catch(Exception e) 
-			{
-				e.printStackTrace();
-			}
+			e.printStackTrace();
 		}
-		else if(material.equals("steel"))
-		{	
-			this.material = MATERIAL_STEEL;
-			
-			sprites.clear();
-			
-			try 
-			{
-				
-				BufferedImage spritesheet = ImageIO.read(getClass().getResourceAsStream("/Sprites/Armor/steelarmor.png"));
-				
-				sprites = new ArrayList<BufferedImage[]>();
-				for(int i = 0; i < 9; i++) 
-				{
-					
-					BufferedImage[] bi = new BufferedImage[numFrames[i]];
-					
-					for(int j = 0; j < numFrames[i]; j++) 
-					{
-						
-						if(i != SWINGING && i != SWINGINGUP && i != SWINGINGDOWN) 
-						{
-							bi[j] = spritesheet.getSubimage(j * width, i * height, width, height);
-						}
-						else if(i == SWINGING)
-						{
-							bi[j] = spritesheet.getSubimage(j * width * 2, i * height, width * 2, height);
-						}
-						else if(i == SWINGINGUP)
-						{
-							bi[j] = spritesheet.getSubimage(j * width, i * height, width, height * 2);
-						}
-						else if(i == SWINGINGDOWN)
-						{
-							bi[j] = spritesheet.getSubimage(j * width, i * height + height, width, height * 2);
-						}
-						
-					}
-					
-					sprites.add(bi);
-					
-					
-				}
-				
-			}
-			catch(Exception e) 
-			{
-				e.printStackTrace();
-			}
-		}
+		
 	}
 	
 }

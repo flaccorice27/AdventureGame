@@ -18,11 +18,11 @@ public class Player extends MapObject {
 	private boolean flinching;
 	private long flinchTimer;
 	
-	//private Armor chestplate;
+	private Armor chestplate;
 	private Armor gauntlets;
-	//private Armor leggings;
-	//private Armor boots;
-	//private Armor helmet;
+	private Armor leggings;
+	private Armor boots;
+	private Armor helmet;
 	
 	private int chestplateMat;
 	private int gauntletsMat;
@@ -74,11 +74,11 @@ public class Player extends MapObject {
 		swordRange = 40;
 		
 		// isntantiate armors
-		//chestplate = new Armor(tileMap, 1);
-		gauntlets = new Armor(tileMap, 2, "none");
-		//leggings = new Armor(tileMap, 3);
-		//boots = new Armor(tileMap, 4);
-		//helmet = new Armor(tileMap, 5);
+		chestplate = new Armor(tileMap, 1, "test");
+		gauntlets = new Armor(tileMap, 2, "test");
+		leggings = new Armor(tileMap, 3, "test");
+		boots = new Armor(tileMap, 4, "test");
+		helmet = new Armor(tileMap, 5, "test");
 		
 		// load sprites
 		try 
@@ -453,7 +453,11 @@ public class Player extends MapObject {
 		}
 		
 		animation.update();
+		chestplate.update(this);
 		gauntlets.update(this);
+		leggings.update(this);
+		boots.update(this);
+		helmet.update(this);
 		
 		previousAction = currentAction;
 		
@@ -482,7 +486,11 @@ public class Player extends MapObject {
 		
 		super.draw(g);
 		
+		chestplate.draw(g);
 		gauntlets.draw(g);
+		leggings.draw(g);
+		boots.draw(g);
+		helmet.draw(g);
 		
 	}
 	
