@@ -53,7 +53,7 @@ public class OverworldState extends GameState {
 		blockedTileMapBottom.setPosition(0, 0);
 		blockedTileMapBottom.setTween(1);
 		
-		player = new Player(blockedTileMapTop);
+		player = new Player(blockedTileMapTop, 64, 64);
 		player.setPosition(64, 64);
 		
 		populateEnemies();
@@ -156,6 +156,54 @@ public class OverworldState extends GameState {
 	
 	public void keyPressed(int k) 
 	{
+		if(k == KeyEvent.VK_1)
+		{
+			player.changeArmor(1, "leather");
+			player.changeArmor(2, "leather");
+			player.changeArmor(3, "leather");
+			player.changeArmor(4, "leather");
+			player.changeArmor(5, "leather");
+		}
+		if(k == KeyEvent.VK_2)
+		{
+			player.changeArmor(1, "copper");
+			player.changeArmor(2, "copper");
+			player.changeArmor(3, "copper");
+			player.changeArmor(4, "copper");
+			player.changeArmor(5, "copper");
+		}
+		if(k == KeyEvent.VK_3)
+		{
+			player.changeArmor(1, "bronze");
+			player.changeArmor(2, "bronze");
+			player.changeArmor(3, "bronze");
+			player.changeArmor(4, "bronze");
+			player.changeArmor(5, "bronze");
+		}
+		if(k == KeyEvent.VK_4)
+		{
+			player.changeArmor(1, "iron");
+			player.changeArmor(2, "iron");
+			player.changeArmor(3, "iron");
+			player.changeArmor(4, "iron");
+			player.changeArmor(5, "iron");
+		}
+		if(k == KeyEvent.VK_5)
+		{
+			player.changeArmor(1, "steel");
+			player.changeArmor(2, "steel");
+			player.changeArmor(3, "steel");
+			player.changeArmor(4, "steel");
+			player.changeArmor(5, "steel");
+		}
+		if(k == KeyEvent.VK_6)
+		{
+			player.changeArmor(1, "titanium");
+			player.changeArmor(2, "titanium");
+			player.changeArmor(3, "titanium");
+			player.changeArmor(4, "titanium");
+			player.changeArmor(5, "titanium");
+		}
 		if(k == KeyEvent.VK_A) player.setLeft(true);
 		if(k == KeyEvent.VK_D) player.setRight(true);
 		if(k == KeyEvent.VK_W) player.setUp(true);
