@@ -38,6 +38,7 @@ public class Player extends MapObject {
 	// animations
 	private double xorig, yorig;
 	private ArrayList<BufferedImage[]> sprites;
+	private int animNumber = 0;
 	private final int[] numFrames = {1, 1, 1, 8, 8, 15, 5, 5, 5};
 	
 	// animation actions
@@ -53,7 +54,7 @@ public class Player extends MapObject {
 	
 	private HashMap<String, AudioPlayer> sfx;
 	
-	public Player(TileMap tm) {
+	public Player(TileMap tm, int x, int y) {
 		
 		super(tm);
 		
@@ -64,21 +65,23 @@ public class Player extends MapObject {
 		
 		moveSpeed = 0.3;
 		maxSpeed = 1.6;
-		stopSpeed = 0.4;
+		//stopSpeed = 0.4;
 		
 		facingRight = true;
 		
 		health = maxHealth = 5;
 		
+		setPosition(x, y);
+		
 		swordDamage = 8;
 		swordRange = 40;
 		
-		// isntantiate armors
-		chestplate = new Armor(tileMap, 1, "test");
-		gauntlets = new Armor(tileMap, 2, "test");
-		leggings = new Armor(tileMap, 3, "test");
-		boots = new Armor(tileMap, 4, "test");
-		helmet = new Armor(tileMap, 5, "test");
+		// instantiate armors
+		chestplate = new Armor(tileMap, 1, "test", getx(), gety());
+		gauntlets = new Armor(tileMap, 2, "test", getx(), gety());
+		leggings = new Armor(tileMap, 3, "test", getx(), gety());
+		boots = new Armor(tileMap, 4, "test", getx(), gety());
+		helmet = new Armor(tileMap, 5, "test", getx(), gety());
 		
 		// load sprites
 		try 
@@ -95,22 +98,7 @@ public class Player extends MapObject {
 				for(int j = 0; j < numFrames[i]; j++) 
 				{
 					
-					//if(i != SWINGING && i != SWINGINGUP && i != SWINGINGDOWN) 
-					//{
 						bi[j] = spritesheet.getSubimage(j * width, i * height, width, height);
-					//}
-					//else if(i == SWINGING)
-					//{
-					//	bi[j] = spritesheet.getSubimage(j * width * 2, i * height, width * 2, height);
-					//}
-					//else if(i == SWINGINGUP)
-					//{
-					//	bi[j] = spritesheet.getSubimage(j * width, i * height, width, height * 2);
-					//}
-					//else if(i == SWINGINGDOWN)
-					//{
-					//	bi[j] = spritesheet.getSubimage(j * width, i * height + height, width, height * 2);
-					//}
 					
 				}
 				
@@ -125,13 +113,13 @@ public class Player extends MapObject {
 		}
 		
 		animation = new Animation();
-		currentAction = IDLEDOWN;
-		animation.setFrames(sprites.get(IDLEDOWN));
+		currentAction = IDLEHORIZONTAL;
+		animation.setFrames(sprites.get(IDLEHORIZONTAL));
 		animation.setDelay(400);
 		
 		sfx = new HashMap<String, AudioPlayer>();
 		//sfx.put("jump", new AudioPlayer("/SFX/jump.mp3"));
-		sfx.put("swing", new AudioPlayer("/SFX/scratch.mp3"));
+		//sfx.put("swing", new AudioPlayer("/SFX/scratch.mp3"));
 		
 	}
 	
@@ -162,6 +150,32 @@ public class Player extends MapObject {
 	public String getDirection()
 	{
 		return lastDirection;
+	}
+	
+	public void changeArmor(int location, String material)
+	{
+		switch(location)
+		{
+			case 1:
+				chestplate.setMaterial(material);
+				break;
+				
+			case 2:
+				gauntlets.setMaterial(material);
+				break;
+				
+			case 3:
+				leggings.setMaterial(material);
+				break;
+				
+			case 4:
+				boots.setMaterial(material);
+				break;
+				
+			case 5:
+				helmet.setMaterial(material);
+				break;
+		}
 	}
 	
 	public void checkAttack(ArrayList<Enemy> enemies) 
@@ -235,19 +249,19 @@ public class Player extends MapObject {
 		{
 			if(dx > 0) 
 			{
-				dx -= stopSpeed;
-				if(dx < 0) 
-				{
+				//dx -= stopSpeed;
+				//if(dx < 0) 
+				//{
 					dx = 0;
-				}
+				//}
 			}
 			else if(dx < 0) 
 			{
-				dx += stopSpeed;
-				if(dx > 0) 
-				{
+				//dx += stopSpeed;
+				//if(dx > 0) 
+				//{
 					dx = 0;
-				}
+				//}
 			}
 		}
 		
@@ -272,19 +286,19 @@ public class Player extends MapObject {
 		{
 			if(dy > 0) 
 			{
-				dy -= stopSpeed;
-				if(dy < 0) 
-				{
+				//dy -= stopSpeed;
+				//if(dy < 0) 
+				//{
 					dy = 0;
-				}
+				//}
 			}
 			else if(dy < 0) 
 			{
-				dy += stopSpeed;
-				if(dy > 0) 
-				{
+				//dy += stopSpeed;
+				//if(dy > 0) 
+				//{
 					dy = 0;
-				}
+				//}
 			}
 		}
 		
@@ -307,8 +321,7 @@ public class Player extends MapObject {
 		
 		if(previousAction == SWINGING && animation.hasPlayedOnce())
 		{
-			
-			normalizeShadow();
+
 			resumeInput();
 			
 		}
@@ -334,15 +347,14 @@ public class Player extends MapObject {
 		{
 			xorig = x;
 			yorig = y;
-			stopInput();
 			
 			if(currentAction != SWINGING) 
 			{
-				sfx.get("swing").play();
+				//sfx.get("swing").play();
 				currentAction = SWINGING;
 				if(lastDirection == "left" || lastDirection == "right")
 				{
-					
+					animNumber = SWINGING;
 					animation.setFrames(sprites.get(SWINGING));
 					animation.setDelay(75);
 					width = 32;
@@ -352,7 +364,7 @@ public class Player extends MapObject {
 				else if(lastDirection == "up")
 				{
 					//y -= 16;
-					
+					animNumber = SWINGINGUP;
 					animation.setFrames(sprites.get(SWINGINGUP));
 					animation.setDelay(75);
 					width = 32;
@@ -364,7 +376,7 @@ public class Player extends MapObject {
 				else if(lastDirection == "down")
 				{
 					//y += 16;
-					
+					animNumber = SWINGINGDOWN;
 					animation.setFrames(sprites.get(SWINGINGDOWN));
 					animation.setDelay(75);
 					width = 32;
@@ -377,6 +389,7 @@ public class Player extends MapObject {
 		{
 			if(currentAction != WALKINGHORIZONTAL)
 			{
+				animNumber = WALKINGHORIZONTAL;
 				currentAction = WALKINGHORIZONTAL;
 				animation.setFrames(sprites.get(WALKINGHORIZONTAL));
 				animation.setDelay(50);
@@ -390,6 +403,7 @@ public class Player extends MapObject {
 		{
 			if(currentAction != WALKINGUP)
 			{
+				animNumber = WALKINGUP;
 				currentAction = WALKINGUP;
 				animation.setFrames(sprites.get(WALKINGUP));
 				animation.setDelay(100);
@@ -402,6 +416,7 @@ public class Player extends MapObject {
 		{
 			if(currentAction != WALKINGDOWN) 
 			{
+				animNumber = WALKINGDOWN;
 				currentAction = WALKINGDOWN;
 				animation.setFrames(sprites.get(WALKINGDOWN));
 				animation.setDelay(100);
@@ -416,6 +431,7 @@ public class Player extends MapObject {
 			{
 				if(currentAction != IDLEHORIZONTAL) 
 				{
+					animNumber = IDLEHORIZONTAL;
 					currentAction = IDLEHORIZONTAL;
 					animation.setFrames(sprites.get(IDLEHORIZONTAL));
 					animation.setDelay(300);
@@ -429,6 +445,7 @@ public class Player extends MapObject {
 			{
 				if(currentAction != IDLEDOWN)
 				{
+					animNumber = IDLEDOWN;
 					currentAction = IDLEDOWN;
 					animation.setFrames(sprites.get(IDLEDOWN));
 					animation.setDelay(300);
@@ -442,6 +459,7 @@ public class Player extends MapObject {
 			{
 				if(currentAction != IDLEUP)
 				{
+					animNumber = IDLEUP;
 					currentAction = IDLEUP;
 					animation.setFrames(sprites.get(IDLEUP));
 					animation.setDelay(300);
@@ -453,13 +471,14 @@ public class Player extends MapObject {
 		}
 		
 		animation.update();
-		chestplate.update(this);
-		gauntlets.update(this);
-		leggings.update(this);
-		boots.update(this);
-		helmet.update(this);
 		
 		previousAction = currentAction;
+		
+		chestplate.update(this, animNumber);
+		gauntlets.update(this, animNumber);
+		leggings.update(this, animNumber);
+		boots.update(this, animNumber);
+		helmet.update(this, animNumber);
 		
 		// set direction
 		if(currentAction != SWINGING) 

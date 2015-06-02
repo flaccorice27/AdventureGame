@@ -14,10 +14,14 @@ public class Armor extends MapObject {
 	private int material;
 	
 	// materials
-	private final static int MATERIAL_NONE = 0;
-	private final static int MATERIAL_LEATHER = 1;
-	private final static int MATERIAL_STEEL = 2;
-	private final static int MATERIAL_TEST = 5;
+	private final static int MATERIAL_TEST = 0;
+	private final static int MATERIAL_NONE = 1;
+	private final static int MATERIAL_LEATHER = 2;
+	private final static int MATERIAL_COPPER = 3;
+	private static final int MATERIAL_BRONZE = 4;
+	private static final int MATERIAL_IRON = 5;
+	private static final int MATERIAL_STEEL = 6;
+	private static final int MATERIAL_TITANIUM = 7;
 	
 	// animations
 	private ArrayList<BufferedImage[]> sprites;
@@ -37,7 +41,7 @@ public class Armor extends MapObject {
 	private boolean playerSwinging;
 	private double xorig, yorig;
 
-	public Armor(TileMap tm, int location, String material) 
+	public Armor(TileMap tm, int location, String material, int x, int y) 
 	{
 		
 		super(tm);
@@ -46,7 +50,12 @@ public class Armor extends MapObject {
 		
 		this.location = location;
 		
-		if(material.equals("none"))
+		// determine material
+		if(material.equals("test"))
+		{
+			this.material = MATERIAL_TEST;
+		}
+		else if(material.equals("none"))
 		{
 			this.material = MATERIAL_NONE;
 		}
@@ -54,16 +63,30 @@ public class Armor extends MapObject {
 		{
 			this.material = MATERIAL_LEATHER;		
 		}
+		else if(material.equals("copper"))
+		{
+			this.material = MATERIAL_COPPER;
+		}
+		else if(material.equals("bronze"))
+		{
+			this.material = MATERIAL_BRONZE;
+		}
+		else if(material.equals("iron"))
+		{
+			this.material = MATERIAL_IRON;
+		}
 		else if(material.equals("steel"))
 		{
 			this.material = MATERIAL_STEEL;
 		}
-		else if(material.equals("test"))
+		else if(material.equals("titanium"))
 		{
-			this.material = MATERIAL_TEST;
+			this.material = MATERIAL_TITANIUM;
 		}
 		
 		manager = new ArmorManager(this.location, this.material);
+		
+		setPosition(x, y);
 		
 		width = 32;
 		height = 32;
@@ -90,22 +113,7 @@ public class Armor extends MapObject {
 				for(int j = 0; j < numFrames[i]; j++) 
 				{
 					
-					//if(i != SWINGING && i != SWINGINGUP && i != SWINGINGDOWN) 
-					//{
 						bi[j] = spritesheet.getSubimage(j * width, i * height, width, height);
-					//}
-					//else if(i == SWINGING)
-					//{
-					//	bi[j] = spritesheet.getSubimage(j * width * 2, i * height, width * 2, height);
-					//}
-					//else if(i == SWINGINGUP)
-					//{
-					//	bi[j] = spritesheet.getSubimage(j * width, i * height, width, height * 2);
-					//}
-					//else if(i == SWINGINGDOWN)
-					//{
-					//	bi[j] = spritesheet.getSubimage(j * width, i * height + height, width, height * 2);
-					//}
 					
 				}
 				
@@ -121,18 +129,108 @@ public class Armor extends MapObject {
 		}
 		
 		animation = new Animation();
-		currentAction = IDLEDOWN;
-		animation.setFrames(sprites.get(IDLEDOWN));
+		currentAction = IDLEHORIZONTAL;
+		animation.setFrames(sprites.get(IDLEHORIZONTAL));
 		animation.setDelay(400);
 		
 		
 	}
 	
-	
-	public void update(Player player)
+	private void getNextPosition() 
 	{
 		
-		this.setPosition(player.getx(), player.gety());
+		// horizontal movement
+		if(left) 
+		{
+			dx -= moveSpeed;
+			if(dx < -maxSpeed) 
+			{
+				dx = -maxSpeed;
+			}
+		}
+		else if(right) 
+		{
+			dx += moveSpeed;
+			if(dx > maxSpeed) 
+			{
+				dx = maxSpeed;
+			}
+		}
+		else 
+		{
+			if(dx > 0) 
+			{
+				//dx -= stopSpeed;
+				//if(dx < 0) 
+				//{
+					dx = 0;
+				//}
+			}
+			else if(dx < 0) 
+			{
+				//dx += stopSpeed;
+				//if(dx > 0) 
+				//{
+					dx = 0;
+				//}
+			}
+		}
+		
+		// vertical movement
+		if(up) 
+		{
+			dy -= moveSpeed;
+			if(dy < -maxSpeed) 
+			{
+				dy = -maxSpeed;
+			}
+		}
+		else if(down) 
+		{
+			dy += moveSpeed;
+			if(dy > maxSpeed) 
+			{
+				dy = maxSpeed;
+			}
+		}
+		else 
+		{
+			if(dy > 0) 
+			{
+				//dy -= stopSpeed;
+				//if(dy < 0) 
+				//{
+					dy = 0;
+				//}
+			}
+			else if(dy < 0) 
+			{
+				//dy += stopSpeed;
+				//if(dy > 0) 
+				//{
+					dy = 0;
+				//}
+			}
+		}
+		
+		// cannot move while attacking
+		if(currentAction == SWINGING) 
+		{
+			dx = 0;
+			dy = 0;
+		}
+		
+	}
+	
+	public void update(Player player, int anim)
+	{
+		
+		// update position
+		//getNextPosition();
+		//checkTileMapCollision();
+		//setPosition(xtemp, ytemp);
+		
+		setPosition(player.getx(), player.gety());
 		
 		//this.currentAction = player.getAction();
 		this.playerSwinging = player.isSwinging();
@@ -159,13 +257,12 @@ public class Armor extends MapObject {
 		{
 			xorig = x;
 			yorig = y;
-			stopInput();
 			
 			if(currentAction != SWINGING) 
 			{
 				//sfx.get("swing").play();
 				currentAction = SWINGING;
-				if(lastDirection == "left" || lastDirection == "right")
+				if(anim == SWINGING)
 				{
 					
 					animation.setFrames(sprites.get(SWINGING));
@@ -174,7 +271,7 @@ public class Armor extends MapObject {
 					height = 32;
 					
 				}
-				else if(lastDirection == "up")
+				else if(anim == SWINGINGUP)
 				{
 					
 					animation.setFrames(sprites.get(SWINGINGUP));
@@ -182,10 +279,10 @@ public class Armor extends MapObject {
 					width = 32;
 					height = 32;
 					
-					specialShadow(0, +32);
+					//specialShadow(0, +32);
 					
 				}
-				else if(lastDirection == "down")
+				else if(anim == SWINGINGDOWN)
 				{
 					
 					animation.setFrames(sprites.get(SWINGINGDOWN));
@@ -197,7 +294,7 @@ public class Armor extends MapObject {
 			}
 		}
 		
-		else if(left || right)
+		else if(anim == WALKINGHORIZONTAL)
 		{
 			if(currentAction != WALKINGHORIZONTAL)
 			{
@@ -210,7 +307,7 @@ public class Armor extends MapObject {
 			}
 		}
 		
-		else if(up) 
+		else if(anim == WALKINGUP) 
 		{
 			if(currentAction != WALKINGUP)
 			{
@@ -222,7 +319,7 @@ public class Armor extends MapObject {
 				
 			}
 		}
-		else if(down) 
+		else if(anim == WALKINGDOWN) 
 		{
 			if(currentAction != WALKINGDOWN) 
 			{
@@ -236,7 +333,7 @@ public class Armor extends MapObject {
 		}
 		else 
 		{
-			if(dx == 0 && (lastDirection == "left" || lastDirection == "right"))
+			if(anim == IDLEHORIZONTAL)
 			{
 				if(currentAction != IDLEHORIZONTAL) 
 				{
@@ -249,7 +346,7 @@ public class Armor extends MapObject {
 				}
 			}
 			
-			if(dy == 0 && lastDirection == "down")
+			if(anim == IDLEDOWN)
 			{
 				if(currentAction != IDLEDOWN)
 				{
@@ -262,7 +359,7 @@ public class Armor extends MapObject {
 				}
 			}
 			
-			if(dy == 0 && lastDirection == "up")
+			if(anim == IDLEUP)
 			{
 				if(currentAction != IDLEUP)
 				{
@@ -300,6 +397,10 @@ public class Armor extends MapObject {
 	
 	public void setMaterial(String material)
 	{
+		
+		manager.setMaterial(material);
+		
+		sprites.clear();
 		
 		try 
 		{
