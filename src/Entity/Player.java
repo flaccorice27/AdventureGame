@@ -505,11 +505,13 @@ public class Player extends MapObject {
 		
 		super.draw(g);
 		
+		/*
 		chestplate.draw(g);
 		gauntlets.draw(g);
 		leggings.draw(g);
 		boots.draw(g);
 		helmet.draw(g);
+		*/
 		
 	}
 	

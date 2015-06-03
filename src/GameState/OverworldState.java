@@ -90,6 +90,8 @@ public class OverworldState extends GameState {
 		blockedTileMapTop.setPosition(GamePanel.WIDTH / 2 - player.getx(), GamePanel.HEIGHT / 2 - player.gety());
 		blockedTileMapBottom.setPosition(GamePanel.WIDTH / 2 - player.getx(), GamePanel.HEIGHT / 2 - player.gety());
 		
+		text.update();
+		
 		// The following code is preemptive of the implementation of enemies
 		//
 		// attack enemies
