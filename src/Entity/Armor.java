@@ -129,8 +129,8 @@ public class Armor extends MapObject {
 		}
 		
 		animation = new Animation();
-		currentAction = IDLEDOWN;
-		animation.setFrames(sprites.get(IDLEDOWN));
+		currentAction = IDLEHORIZONTAL;
+		animation.setFrames(sprites.get(IDLEHORIZONTAL));
 		animation.setDelay(400);
 		
 		
@@ -222,7 +222,7 @@ public class Armor extends MapObject {
 		
 	}
 	
-	public void update(Player player)
+	public void update(Player player, int anim)
 	{
 		
 		// update position
@@ -257,13 +257,16 @@ public class Armor extends MapObject {
 		{
 			xorig = x;
 			yorig = y;
+<<<<<<< HEAD
 			//stopInput();
+=======
+>>>>>>> a209f7a23c7604805346d07de4c0af555af25a7c
 			
 			if(currentAction != SWINGING) 
 			{
 				//sfx.get("swing").play();
 				currentAction = SWINGING;
-				if(lastDirection == "left" || lastDirection == "right")
+				if(anim == SWINGING)
 				{
 					
 					animation.setFrames(sprites.get(SWINGING));
@@ -272,7 +275,7 @@ public class Armor extends MapObject {
 					height = 32;
 					
 				}
-				else if(lastDirection == "up")
+				else if(anim == SWINGINGUP)
 				{
 					
 					animation.setFrames(sprites.get(SWINGINGUP));
@@ -283,7 +286,7 @@ public class Armor extends MapObject {
 					//specialShadow(0, +32);
 					
 				}
-				else if(lastDirection == "down")
+				else if(anim == SWINGINGDOWN)
 				{
 					
 					animation.setFrames(sprites.get(SWINGINGDOWN));
@@ -295,7 +298,7 @@ public class Armor extends MapObject {
 			}
 		}
 		
-		else if(left || right)
+		else if(anim == WALKINGHORIZONTAL)
 		{
 			if(currentAction != WALKINGHORIZONTAL)
 			{
@@ -308,7 +311,7 @@ public class Armor extends MapObject {
 			}
 		}
 		
-		else if(up) 
+		else if(anim == WALKINGUP) 
 		{
 			if(currentAction != WALKINGUP)
 			{
@@ -320,7 +323,7 @@ public class Armor extends MapObject {
 				
 			}
 		}
-		else if(down) 
+		else if(anim == WALKINGDOWN) 
 		{
 			if(currentAction != WALKINGDOWN) 
 			{
@@ -334,7 +337,7 @@ public class Armor extends MapObject {
 		}
 		else 
 		{
-			if(dx == 0 && (lastDirection == "left" || lastDirection == "right"))
+			if(anim == IDLEHORIZONTAL)
 			{
 				if(currentAction != IDLEHORIZONTAL) 
 				{
@@ -347,7 +350,7 @@ public class Armor extends MapObject {
 				}
 			}
 			
-			if(dy == 0 && lastDirection == "down")
+			if(anim == IDLEDOWN)
 			{
 				if(currentAction != IDLEDOWN)
 				{
@@ -360,7 +363,7 @@ public class Armor extends MapObject {
 				}
 			}
 			
-			if(dy == 0 && lastDirection == "up")
+			if(anim == IDLEUP)
 			{
 				if(currentAction != IDLEUP)
 				{

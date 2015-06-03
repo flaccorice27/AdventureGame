@@ -38,6 +38,7 @@ public class Player extends MapObject {
 	// animations
 	private double xorig, yorig;
 	private ArrayList<BufferedImage[]> sprites;
+	private int animNumber = 0;
 	private final int[] numFrames = {1, 1, 1, 8, 8, 15, 5, 5, 5};
 	
 	// animation actions
@@ -112,8 +113,8 @@ public class Player extends MapObject {
 		}
 		
 		animation = new Animation();
-		currentAction = IDLEDOWN;
-		animation.setFrames(sprites.get(IDLEDOWN));
+		currentAction = IDLEHORIZONTAL;
+		animation.setFrames(sprites.get(IDLEHORIZONTAL));
 		animation.setDelay(400);
 		
 		sfx = new HashMap<String, AudioPlayer>();
@@ -320,8 +321,7 @@ public class Player extends MapObject {
 		
 		if(previousAction == SWINGING && animation.hasPlayedOnce())
 		{
-			
-			normalizeShadow();
+
 			resumeInput();
 			
 		}
@@ -347,7 +347,10 @@ public class Player extends MapObject {
 		{
 			xorig = x;
 			yorig = y;
+<<<<<<< HEAD
 			//stopInput();
+=======
+>>>>>>> a209f7a23c7604805346d07de4c0af555af25a7c
 			
 			if(currentAction != SWINGING) 
 			{
@@ -355,7 +358,7 @@ public class Player extends MapObject {
 				currentAction = SWINGING;
 				if(lastDirection == "left" || lastDirection == "right")
 				{
-					
+					animNumber = SWINGING;
 					animation.setFrames(sprites.get(SWINGING));
 					animation.setDelay(75);
 					width = 32;
@@ -365,7 +368,7 @@ public class Player extends MapObject {
 				else if(lastDirection == "up")
 				{
 					//y -= 16;
-					
+					animNumber = SWINGINGUP;
 					animation.setFrames(sprites.get(SWINGINGUP));
 					animation.setDelay(75);
 					width = 32;
@@ -377,7 +380,7 @@ public class Player extends MapObject {
 				else if(lastDirection == "down")
 				{
 					//y += 16;
-					
+					animNumber = SWINGINGDOWN;
 					animation.setFrames(sprites.get(SWINGINGDOWN));
 					animation.setDelay(75);
 					width = 32;
@@ -390,6 +393,7 @@ public class Player extends MapObject {
 		{
 			if(currentAction != WALKINGHORIZONTAL)
 			{
+				animNumber = WALKINGHORIZONTAL;
 				currentAction = WALKINGHORIZONTAL;
 				animation.setFrames(sprites.get(WALKINGHORIZONTAL));
 				animation.setDelay(50);
@@ -403,6 +407,7 @@ public class Player extends MapObject {
 		{
 			if(currentAction != WALKINGUP)
 			{
+				animNumber = WALKINGUP;
 				currentAction = WALKINGUP;
 				animation.setFrames(sprites.get(WALKINGUP));
 				animation.setDelay(100);
@@ -415,6 +420,7 @@ public class Player extends MapObject {
 		{
 			if(currentAction != WALKINGDOWN) 
 			{
+				animNumber = WALKINGDOWN;
 				currentAction = WALKINGDOWN;
 				animation.setFrames(sprites.get(WALKINGDOWN));
 				animation.setDelay(100);
@@ -429,6 +435,7 @@ public class Player extends MapObject {
 			{
 				if(currentAction != IDLEHORIZONTAL) 
 				{
+					animNumber = IDLEHORIZONTAL;
 					currentAction = IDLEHORIZONTAL;
 					animation.setFrames(sprites.get(IDLEHORIZONTAL));
 					animation.setDelay(300);
@@ -442,6 +449,7 @@ public class Player extends MapObject {
 			{
 				if(currentAction != IDLEDOWN)
 				{
+					animNumber = IDLEDOWN;
 					currentAction = IDLEDOWN;
 					animation.setFrames(sprites.get(IDLEDOWN));
 					animation.setDelay(300);
@@ -455,6 +463,7 @@ public class Player extends MapObject {
 			{
 				if(currentAction != IDLEUP)
 				{
+					animNumber = IDLEUP;
 					currentAction = IDLEUP;
 					animation.setFrames(sprites.get(IDLEUP));
 					animation.setDelay(300);
@@ -466,14 +475,23 @@ public class Player extends MapObject {
 		}
 		
 		animation.update();
+<<<<<<< HEAD
 		
 		chestplate.update(this);
 		gauntlets.update(this);
 		leggings.update(this);
 		boots.update(this);
 		helmet.update(this);
+=======
+>>>>>>> a209f7a23c7604805346d07de4c0af555af25a7c
 		
 		previousAction = currentAction;
+		
+		chestplate.update(this, animNumber);
+		gauntlets.update(this, animNumber);
+		leggings.update(this, animNumber);
+		boots.update(this, animNumber);
+		helmet.update(this, animNumber);
 		
 		// set direction
 		if(currentAction != SWINGING) 

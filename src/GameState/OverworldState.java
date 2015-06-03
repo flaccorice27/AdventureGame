@@ -25,6 +25,8 @@ public class OverworldState extends GameState {
 	
 	private HUD hud;
 	
+	private TextBox text;
+	
 	public OverworldState(GameStateManager gsm) 
 	{
 		this.gsm = gsm;
@@ -62,6 +64,10 @@ public class OverworldState extends GameState {
 		
 		// The hud shows important information such as life and energy (currently denoted as a heart and a fire)
 		hud = new HUD(player, scale);
+		
+		text = new TextBox(scale);
+		text.show();
+		text.setMessage("I am sitting here in my basement working on the programming of a video game while my friend Brian watches a Jontron video.");
 		
 		bgMusic = new AudioPlayer("/Music/Overworld_Theme.wav");
 		bgMusic.play();
@@ -146,6 +152,8 @@ public class OverworldState extends GameState {
 		
 		// draw hud
 		hud.draw(g);
+		
+		text.draw(g);
 		
 	}
 	
