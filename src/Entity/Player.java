@@ -30,7 +30,7 @@ public class Player extends MapObject {
 	private int bootsMat;
 	private int helmetMat;
 	
-	// scratch
+	// swing
 	private boolean swinging;
 	private int swordDamage;
 	private int swordRange;
@@ -99,6 +99,9 @@ public class Player extends MapObject {
 				{
 					
 						bi[j] = spritesheet.getSubimage(j * width, i * height, width, height);
+						
+						Color color = new Color(bi[j].getRGB(16, 16));
+						System.out.printf("%d\t%d\t%d\n", color.getRed(), color.getGreen(), color.getBlue());
 					
 				}
 				
