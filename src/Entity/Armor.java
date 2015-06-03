@@ -13,6 +13,8 @@ public class Armor extends MapObject {
 	private int location;
 	private int material;
 	
+	//JESUS FUCKING CHRIST
+	
 	// materials
 	private final static int MATERIAL_TEST = 0;
 	private final static int MATERIAL_NONE = 1;
