@@ -259,10 +259,7 @@ public class Armor extends MapObject {
 		{
 			xorig = x;
 			yorig = y;
-<<<<<<< HEAD
 			//stopInput();
-=======
->>>>>>> a209f7a23c7604805346d07de4c0af555af25a7c
 			
 			if(currentAction != SWINGING) 
 			{

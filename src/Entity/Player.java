@@ -347,10 +347,7 @@ public class Player extends MapObject {
 		{
 			xorig = x;
 			yorig = y;
-<<<<<<< HEAD
 			//stopInput();
-=======
->>>>>>> a209f7a23c7604805346d07de4c0af555af25a7c
 			
 			if(currentAction != SWINGING) 
 			{
@@ -475,15 +472,6 @@ public class Player extends MapObject {
 		}
 		
 		animation.update();
-<<<<<<< HEAD
-		
-		chestplate.update(this);
-		gauntlets.update(this);
-		leggings.update(this);
-		boots.update(this);
-		helmet.update(this);
-=======
->>>>>>> a209f7a23c7604805346d07de4c0af555af25a7c
 		
 		previousAction = currentAction;
 		
